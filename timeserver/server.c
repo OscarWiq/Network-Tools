@@ -128,6 +128,6 @@ int main() {
 	WSACleanup();
 #endif
 
-		printf("Done.\n");
-		return 0;
+	printf("Done.\n");
+	return 0;
 }

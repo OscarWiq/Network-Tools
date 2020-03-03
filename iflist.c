@@ -13,14 +13,12 @@ int main () {
         return -1;
     }
 
-
     addr = addrs;
     while (addr) {
 	   if (addr->ifa_addr == NULL) {
 		  addr = addr->ifa_next;
 		  continue;
-		}
-	
+		}	
 
         int fam = addr->ifa_addr->sa_family;
         if (fam == AF_INET || fam == AF_INET6) {

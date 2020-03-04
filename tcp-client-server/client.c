@@ -20,11 +20,11 @@ int main (int argc, char *argv[]) {
 	}
 
 	printf("Configuring remote addr..\n");
-	struct addrinfo addr_info;
-	memset(&addr_info, 0, sizeof(addr_info));
-	addr_info.ai_socktype = SOCK_STREAM;
+	struct addrinfo hints;
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_socktype = SOCK_STREAM;
 	struct addrinfo *peer_addr;
-	if (getaddrinfo(argv[1], argv[2], &addr_info, &peer_addr)) {
+	if (getaddrinfo(argv[1], argv[2], &hints, &peer_addr)) {
 		fprintf(stderr, "Call to getaddrinfo failed. (%d)\n", GETSOCKETERR());
 		return 1;
 	}

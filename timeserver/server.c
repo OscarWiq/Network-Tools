@@ -47,12 +47,12 @@ int main() {
 #endif
 
 	printf("Configuring local addr..\n");
-	struct addrinfo addr_info, *bind_addr;
-	memset(&addr_info, 0, sizeof(addr_info));
-	addr_info.ai_family = AF_INET6;
-	addr_info.ai_socktype = SOCK_STREAM;
-	addr_info.ai_flags = AI_PASSIVE;
-	getaddrinfo(0, "8080", &addr_info, &bind_addr);
+	struct addrinfo hints, *bind_addr;
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family = AF_INET6;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags = AI_PASSIVE;
+	getaddrinfo(0, "8080", &hints, &bind_addr);
 
 	printf("Configuring socket..\n");
 	SOCKET slisten;

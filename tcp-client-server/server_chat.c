@@ -12,16 +12,16 @@ int main () {
 #endif
 
 	printf("Configuring local addr..\n");
-	struct addrinfo addr_info;
-	memset(&addr_info, 0, sizeof(addr_info));
-	addr_info.ai_family = AF_INET;// ipv4
-	addr_info.ai_socktype = SOCK_STREAM;// tcp
-	addr_info.ai_flags = AI_PASSIVE;// bind wildcard, i.e listen on any viable interface
+	struct addrinfo hints;
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family = AF_INET;// ipv4
+	hints.ai_socktype = SOCK_STREAM;// tcp
+	hints.ai_flags = AI_PASSIVE;// bind wildcard, i.e listen on any viable interface
 
 	// pass 0 (NULL) as first arg in conjunction with AI_PASSIVE flagged
 	// in order to generate addr suitable for bind()
 	struct addrinfo *bind_addr;
-	getaddrinfo(0, "8080", &addr_info, &bind_addr);
+	getaddrinfo(0, "8080", &hints, &bind_addr);
 
 	printf("Configuring socket..\n");
 	SOCKET slisten = socket(bind_addr->ai_family,

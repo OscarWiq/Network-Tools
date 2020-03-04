@@ -3,8 +3,8 @@ Basic network tools written in C
 
 - list-interfaces: reads network adapters and lists relevant information such as addresses, addr-types and interface names.
 - timeserver: answers to a request with current date and time
-- tcp-client-server: functional tcp client, send requests to sites. 
-	example call: "./client example.com http" then:
+- tcp-client: functional tcp client, send basic requests and connect to tcp-servers. useful to test server-code. 
+	example request: "./client example.com 80" then:
 	"GET / HTTP/1.1"
 	"Host: example.com"
-	TODO: tcp-server to communicate with client
+- tcp-server: basic chatserver, responds to the client program and relays messages to all non-sender/non-listener sockets.

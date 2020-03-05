@@ -86,12 +86,48 @@ int main (int argc, char *argv[]) {
     	p++;
     	if (h_ptr != argv[1]) 
     		++h;
-
     	
     	while (*h_ptr && *h_ptr != '.')
     		*p++ = *h++;
 
     	*label_len = p - label_len - 1;// set to new label
     }
+
+    *ptr++ = 0;
+    *ptr++ = 0x00; *ptr++ = query_type;// QTYPE
+    *ptr++ = 0x00; *ptr++ = 0x01;// QCLASS
+
+    // compare p to query beginning for size
+    const int query_size = p - query;
+
+    // TODO: implement select() to check
+    // for timeouts and retry, since UDP isnt reliable
+    // if this is not implemented, the query
+    // might be lost in transit and the
+    // program waits for a reply that never comes
+    int bytes_sent = sento(peer_sock,
+    	query,
+    	query_size,
+    	0,
+    	peer_addr->ai_addr,
+    	peer_addr->ai_addrlen);
+    printf("%d bytes sent. \n", bytes_sent);
+
+    // call show_dns_msg(query, query_size);
+
+    char read[1024];
+    int bytes_recv = recvfrom(peer_sock, read, 1024, 0, 0, 0);
+    printf("%d bytes received.\n", bytes_recv);
+    // call show_dns_msg(read, bytes_recv)
+    // printf(\n);
+
+    freeaddrinfo(peer_addr);
+    CLOSESOCKET(peer_sock);
+
+#if defined(_WIN32)
+    WSACleanup();
+#endif
+
+    return 0;
 }	
 

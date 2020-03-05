@@ -100,12 +100,12 @@ int main () {
 						continue;
 					}
 
-                    int j;
-                    for (j = 0; j < bytes_recv; ++j) {
-                        if (j % 2 == 0) read[j] = toupper(read[j]);
-                        else read[j] = tolower(read[j]);
-                    }
-                    send(i, read, bytes_recv, 0);
+                    		int j;
+                    		for (j = 0; j < bytes_recv; ++j) {
+                        		if (j % 2 == 0) read[j] = toupper(read[j]);
+                        		else read[j] = tolower(read[j]);
+                    		}
+                    		send(i, read, bytes_recv, 0);
 
 				}
 			}// FD_ISSET

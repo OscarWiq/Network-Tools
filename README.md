@@ -20,5 +20,5 @@ tcp-server:
 - basic microservice, manipulates received string with toupper()/tolower() and sends it back to client.
 
 dns:
-- basic dns-lookup, resolve a hostname into ip-addresses
+- basic ip-lookup, resolve a hostname into ip-addresses
 - TODO: utility to send dns queries to a dns server and receive a dns response, then print dns-message etc.

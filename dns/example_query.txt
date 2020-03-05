@@ -1,0 +1,19 @@
+Example of DNS for example.com ready to be sent to a DNS server over port 53,
+if successful the DNS-server sends a UDP-response back with ID matching the query.
+Furthermore QR will be set to indicate a response, QDCOUNT set to 1,
+and the original question will be included. ANCOUNT indicates the numbers of answers included
+and is of type small positive int.
+
+	char query[] = {
+			0xAB, 0xCD,// ID
+			0x01, 0x00,// Recursion
+			0x00, 0x01,// QDCOUNT
+			0x00, 0x00,// ANCOUNT
+			0x00, 0x00,// NSCOUNT
+			0x00, 0x00,// ARCOUNT
+			// label
+			7, 'e', 'x', 'a', 'm', 'p', 'l', 'e', 3, 'c', 'o', 'm'
+			0,// End of name
+			0x00, 0x01,// QTYPE = A
+			0x00, 0x01,// QCLASS
+			};

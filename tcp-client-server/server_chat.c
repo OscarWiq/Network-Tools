@@ -24,16 +24,16 @@ int main () {
 	getaddrinfo(0, "8080", &hints, &bind_addr);
 
 	printf("Configuring socket..\n");
-	SOCKET slisten = socket(bind_addr->ai_family,
+	SOCKET listen_sock = socket(bind_addr->ai_family,
 		bind_addr->ai_socktype,
 		bind_addr->ai_protocol);
-	if (!ISVALIDSOCKET(slisten)) {
+	if (!ISVALIDSOCKET(listen_sock)) {
 		fprintf(stderr, "Call to socket() failed. (%d)\n", GETSOCKETERR());
 		return 1;
 	}
 
 	printf("Binding socket to local addr..\n");
-	if (bind(slisten, bind_addr->ai_addr, bind_addr->ai_addrlen)) {
+	if (bind(listen_sock, bind_addr->ai_addr, bind_addr->ai_addrlen)) {
 		fprintf(stderr, "Call to bind() failed. (%d)\n", GETSOCKETERR());
 		return 1;
 	}
@@ -41,15 +41,15 @@ int main () {
 
 	printf("Listening..\n");
 	int queue = 10;
-	if (listen(slisten, queue) < 0) {
+	if (listen(listen_sock, queue) < 0) {
 		fprintf(stderr, "Call to listen() failed. (%d)\n", GETSOCKETERR());
 		return 1;
 	}
 
 	fd_set master;// holds all active sockets
 	FD_ZERO(&master);
-	FD_SET(slisten, &master);
-	SOCKET smax = slisten;// holds largest descriptor
+	FD_SET(listen_sock, &master);
+	SOCKET max_sock = listen_sock;// holds largest descriptor
 	
 	printf("Waiting for connections..\n");
 	while (1) {
@@ -57,19 +57,19 @@ int main () {
 		sread = master;
 		// pass a timeout arg of 0 (NULL) to select()
 		// to avoid returns until master set is ready to be read from
-		if (select(smax + 1, &sread, 0, 0, 0) < 0) {
+		if (select(max_sock + 1, &sread, 0, 0, 0) < 0) {
 			fprintf(stderr, "Call to select() failed. %s\n", GETSOCKETERR());
 			return 1;
 		}
 
 		SOCKET i;
-		for (i = 1; i <= smax; ++i) {
+		for (i = 1; i <= max_sock; ++i) {
 			if (FD_ISSET(i, &sread)) {
 
-				if (i == slisten) {
+				if (i == listen_sock) {
 					struct sockaddr_storage client_addr;
 					socklen_t client_size = sizeof(client_addr);
-					SOCKET sclient = accept(slisten,
+					SOCKET sclient = accept(listen_sock,
 						(struct sockaddr*)&client_addr,
 						&client_size);
 					if (!ISVALIDSOCKET(sclient)) {
@@ -78,8 +78,8 @@ int main () {
 					}
 
 					FD_SET(sclient, &master);
-					if (sclient > smax) 
-						smax = sclient;
+					if (sclient > max_sock) 
+						max_sock = sclient;
 
 					char addr_buffer[100];
 					getnameinfo((struct sockaddr*)&client_addr,
@@ -101,9 +101,9 @@ int main () {
 					}
 
 					SOCKET j;
-					for (j = 1; j <= smax; ++j) {
+					for (j = 1; j <= max_sock; ++j) {
 						if (FD_ISSET(j, &master)) {
-							if (j == slisten || j == i) 
+							if (j == listen_sock || j == i) 
 								continue;
 							else
 								send(j, read, bytes_recv, 0);
@@ -112,11 +112,11 @@ int main () {
 					}
 				}
 			}// FD_ISSET
-		}// for i <= smax
+		}// for i <= max_sock
 	}// while (1)
 
 	printf("Closing listening socket..\n");
-	CLOSESOCKET(slisten);
+	CLOSESOCKET(listen_sock);
 #if defined(_WIN32)
 	WSACleanup();
 #endif

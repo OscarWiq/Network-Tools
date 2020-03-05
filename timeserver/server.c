@@ -55,28 +55,28 @@ int main() {
 	getaddrinfo(0, "8080", &hints, &bind_addr);
 
 	printf("Configuring socket..\n");
-	SOCKET slisten;
-	slisten = socket(bind_addr->ai_family, bind_addr->ai_socktype, bind_addr->ai_protocol);
-	if (!ISVALIDSOCKET(slisten)) {
+	SOCKET listen_sock;
+	listen_sock = socket(bind_addr->ai_family, bind_addr->ai_socktype, bind_addr->ai_protocol);
+	if (!ISVALIDSOCKET(listen_sock)) {
 		fprintf(stderr, "Call to socket() failed. (%d)\n", GETSOCKETERR());
 		return 1;
 	}
 
 	int opt = 0;
-	if (setsockopt(slisten, IPPROTO_IPV6, IPV6_V6ONLY, (void*)&opt, sizeof(opt))) {
+	if (setsockopt(listen_sock, IPPROTO_IPV6, IPV6_V6ONLY, (void*)&opt, sizeof(opt))) {
 		fprintf(stderr, "Call to setsockopt() failed. (%d)\n", GETSOCKETERR());
 		return 1;
 	}
 
 	printf("Binding socket to local addr..\n");
-	if (bind(slisten, bind_addr->ai_addr, bind_addr->ai_addrlen)) {
+	if (bind(listen_sock, bind_addr->ai_addr, bind_addr->ai_addrlen)) {
 		fprintf(stderr, "Call to bind() failed. (%d)\n", GETSOCKETERR());
 		return 1;
 	}
 	freeaddrinfo(bind_addr);
 
 	printf("Listening..\n");
-	if (listen(slisten, 10) < 0) {
+	if (listen(listen_sock, 10) < 0) {
 		fprintf(stderr, "Call to listen() failed. (%d)\n", GETSOCKETERR());
 		return 1;
 	}
@@ -84,8 +84,8 @@ int main() {
 	printf("Waiting for client..\n");
 	struct sockaddr_storage client_addr;
 	socklen_t client_size = sizeof(client_addr);
-	SOCKET sclient = accept(slisten, (struct sockaddr*)&client_addr, &client_size);
-	if (!ISVALIDSOCKET(sclient)) {
+	SOCKET client_sock = accept(listen_sock, (struct sockaddr*)&client_addr, &client_size);
+	if (!ISVALIDSOCKET(client_sock)) {
 		fprintf(stderr, "Call to accept() failed. (%d)\n", GETSOCKETERR());
 		return 1;
 	}
@@ -97,7 +97,7 @@ int main() {
 
 	printf("Reading request..\n");
 	char req[1024];
-	int bytes_recv = recv(sclient, req, 1024, 0);
+	int bytes_recv = recv(client_sock, req, 1024, 0);
 	printf("%d bytes received.\n", bytes_recv);
 
 	printf("Sending response..\n");
@@ -106,21 +106,21 @@ int main() {
 		"Connection: close\r\n"
 		"Content-type: text/plain\r\n\r\n"
 		"Local time: ";
-	int bytes_sent = send(sclient, res, strlen(res), 0);
+	int bytes_sent = send(client_sock, res, strlen(res), 0);
 	printf("%d of %d bytes sent.\n", bytes_sent, (int)strlen(res));
 
 	time_t t;
 	time(&t);
 	char *t_msg = ctime(&t);
-	bytes_sent = send(sclient, t_msg, strlen(t_msg), 0);
+	bytes_sent = send(client_sock, t_msg, strlen(t_msg), 0);
 	printf("%d of %d bytes sent.\n", bytes_sent, (int)strlen(t_msg));
 
 
 	printf("Closing connection..\n");
-	CLOSESOCKET(sclient);
+	CLOSESOCKET(client_sock);
 
 	printf("Closing socket..\n");
-	CLOSESOCKET(slisten);
+	CLOSESOCKET(listen_sock);
 
 
 

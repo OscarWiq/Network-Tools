@@ -7,4 +7,5 @@ Basic network tools written in C
 	example request: "./client example.com 80" then:
 	"GET / HTTP/1.1"
 	"Host: example.com"
-- tcp-server: basic chatserver, responds to the client program and relays messages to all non-sender/non-listener sockets.
+- tcp-server: - basic chatserver, responds to the client program and relays messages to all non-sender/non-listener sockets.
+	      - basic microservice, manipulates received string with toupper()/tolower() and sends it back to client.

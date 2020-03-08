@@ -142,7 +142,7 @@ const unsigned char *show_name(const unsigned char *msg,
 		ptr += 2;
 		printf("ptr (%d)", k);
 		// we know that ptr[1] is still within the msg
-		// because of the of the earlier check that
+		// bc of the earlier check that
 		// ptr was at least 2 bytes from the end
 		show_name(msg, msg + k, end);// we now know the name ptr, pass new value
 		return ptr;

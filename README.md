@@ -19,6 +19,10 @@ tcp-server:
 - basic chatserver, responds to the client program and relays messages to all non-sender/non-listener sockets.
 - basic microservice, manipulates received string with toupper()/tolower() and sends it back to client.
 
+udp client & server:
+- client utlizes same code as tcp except for ai_socktype = SOCK_DGRAM, useful to test server-code.
+- server: TODO: microservice like tcp but instead udp
+
 dns:
 - utility to send dns queries: a, aaaa, mx, txt, any. by default to 1.1.1.1 but easily changed.
 - usage: gcc dns_query.c -o query; ./query hostname type

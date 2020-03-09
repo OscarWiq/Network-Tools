@@ -58,9 +58,7 @@ int main (int argc, char *argv[]) {
         FD_ZERO(&sread);
         FD_SET(server_sock, &sread);
 
-        struct timeval timeout;
-        timeout.tv_sec = 0;
-        timeout.tv_usec = 200000;
+        struct timeval timeout = { .tv_sec = 0, .tv_usec = 200000 };
 
         if (select(server_sock + 1, &sread, 0, 0, &timeout) < 0) {
             fprintf(stderr, "select() failed. (%d)\n", GETSOCKETERR());

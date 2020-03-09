@@ -21,7 +21,7 @@ tcp-server:
 
 udp client & server:
 - client utlizes same code as tcp except for ai_socktype = SOCK_DGRAM, useful to test server-code.
-- server: TODO: microservice like tcp but instead udp
+- server: basic microservice, manipulates received string with toupper()/tolower() and sends it back to client.
 
 dns:
 - utility to send dns queries: a, aaaa, mx, txt, any. by default to 1.1.1.1 but easily changed.

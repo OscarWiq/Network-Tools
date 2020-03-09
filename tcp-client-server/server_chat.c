@@ -69,17 +69,17 @@ int main () {
 				if (i == listen_sock) {
 					struct sockaddr_storage client_addr;
 					socklen_t client_size = sizeof(client_addr);
-					SOCKET sclient = accept(listen_sock,
+					SOCKET client_sock = accept(listen_sock,
 						(struct sockaddr*)&client_addr,
 						&client_size);
-					if (!ISVALIDSOCKET(sclient)) {
+					if (!ISVALIDSOCKET(client_sock)) {
 						fprintf(stderr, "Call to accept() failed. %s\n", GETSOCKETERR());
 						return 1;
 					}
 
-					FD_SET(sclient, &master);
-					if (sclient > max_sock) 
-						max_sock = sclient;
+					FD_SET(client_sock, &master);
+					if (client_sock > max_sock) 
+						max_sock = client_sock;
 
 					char addr_buffer[100];
 					getnameinfo((struct sockaddr*)&client_addr,

@@ -30,4 +30,5 @@ dns:
 
 http:
 - web-client: send GET requests and view complete http-response. usage: get_client example.com
-- web-server: TODO
+- web-server: handles multiple connections, properly parses http, handles errors, does not use global state. while functional, the server has plenty of shortcomings and I would advice against running it on the internet. 
+- TODO: work on security and robustness 
